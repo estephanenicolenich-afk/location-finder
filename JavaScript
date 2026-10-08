@@ -1,58 +1,87 @@
 // ============================================
 // LOCATION FINDER
 // Systems Integration Project
-// External systems:
-//   1. Browser Geolocation API - gets coordinates
-//   2. Leaflet + OpenStreetMap - displays map
-//   3. Nominatim API - reverse geocoding (address)
+//
+// External Systems:
+// 1. Browser Geolocation API
+// 2. Leaflet + OpenStreetMap
+// 3. Nominatim Reverse Geocoding API
 // ============================================
 
-// --- DOM references ---
+// ============================================
+// DOM REFERENCES
+// ============================================
+
 const locateBtn = document.getElementById("locateBtn");
 const clearBtn = document.getElementById("clearBtn");
+
 const statusEl = document.getElementById("status");
 const resultsEl = document.getElementById("results");
+
 const latEl = document.getElementById("lat");
 const lngEl = document.getElementById("lng");
 const accuracyEl = document.getElementById("accuracy");
 const addressEl = document.getElementById("address");
 const timestampEl = document.getElementById("timestamp");
 
-// --- Map state ---
+// ============================================
+// MAP STATE
+// ============================================
+
 let map = null;
 let marker = null;
+let accuracyCircle = null;
 
 // ============================================
-// INTEGRATION 1: Browser Geolocation API
+// BUTTON EVENTS
 // ============================================
+
+locateBtn.addEventListener("click", findLocation);
+clearBtn.addEventListener("click", clearLocation);
+
+// ============================================
+// INTEGRATION 1:
+// BROWSER GEOLOCATION API
+// ============================================
+
 function findLocation() {
-    statusEl.textContent = "Requesting your location...";
+    statusEl.textContent = "📡 Requesting your location...";
     statusEl.className = "status";
 
-    // Check if browser supports geolocation
+    locateBtn.disabled = true;
+    locateBtn.textContent = "📡 Locating...";
+
+    // Check browser support
     if (!navigator.geolocation) {
-        statusEl.textContent = "Error: Your browser does not support Geolocation.";
-        statusEl.className = "status error";
+        showError("Your browser does not support geolocation.");
+        resetLocateButton();
         return;
     }
 
-    // Request location
     navigator.geolocation.getCurrentPosition(
-        onSuccess,   // success callback
-        onError,     // error callback
+        onSuccess,
+        onError,
         {
             enableHighAccuracy: true,
-            timeout: 10000,
+            timeout: 15000,
             maximumAge: 0
         }
     );
 }
 
+// ============================================
+// SUCCESS
+// ============================================
+
 function onSuccess(position) {
+
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
     const accuracy = position.coords.accuracy;
-    const timestamp = new Date(position.timestamp).toLocaleString();
+
+    const timestamp = new Date(
+        position.timestamp
+    ).toLocaleString();
 
     // Display coordinates
     latEl.textContent = lat.toFixed(6);
@@ -60,98 +89,312 @@ function onSuccess(position) {
     accuracyEl.textContent = accuracy.toFixed(1);
     timestampEl.textContent = timestamp;
 
-    // Show results panel
+    // Show result cards
     resultsEl.classList.remove("hidden");
-    statusEl.textContent = "Location found! Fetching address...";
-    statusEl.className = "status";
 
-    // Initialize / update map
-    initMap(lat, lng);
+    statusEl.textContent =
+        "✅ Location found! Fetching your address...";
 
-    // INTEGRATION 2: Reverse geocoding via Nominatim API
+    statusEl.className = "status success";
+
+    // Update map
+    initMap(lat, lng, accuracy);
+
+    // Reverse geocode
     fetchAddress(lat, lng);
+
+    resetLocateButton();
 }
 
+// ============================================
+// LOCATION ERROR
+// ============================================
+
 function onError(error) {
-    let message = "";
+
+    let message;
+
     switch (error.code) {
+
         case error.PERMISSION_DENIED:
-            message = "Location access denied. Please allow permission in your browser.";
+            message =
+                "Location access was denied. Please allow location permission in your browser.";
             break;
+
         case error.POSITION_UNAVAILABLE:
-            message = "Location information is unavailable.";
+            message =
+                "Your location could not be determined. Please try again.";
             break;
+
         case error.TIMEOUT:
-            message = "The request to get your location timed out.";
+            message =
+                "The location request timed out. Please try again.";
             break;
+
         default:
-            message = "An unknown error occurred.";
+            message =
+                "An unknown error occurred while finding your location.";
     }
-   function onError(error) {
-    statusEl.textContent = 'Error: ${error.message || error}';
+
+    showError(message);
+    resetLocateButton();
+}
+
+// ============================================
+// ERROR DISPLAY
+// ============================================
+
+function showError(message) {
+
+    statusEl.textContent = "❌ " + message;
     statusEl.className = "status error";
 }
 
-// ==========================================
-// INTEGRATION 2: Leaflet + OpenStreetMap
-// ==========================================
+// ============================================
+// RESET BUTTON
+// ============================================
 
-let map; // Declare globally so initMap can check if it exists
+function resetLocateButton() {
 
-function initMap(lat, lng) {
-    // Create map if it doesn't exist yet
+    locateBtn.disabled = false;
+    locateBtn.textContent = "📍 Find My Location";
+}
+
+// ============================================
+// INTEGRATION 2:
+// LEAFLET + OPENSTREETMAP
+// ============================================
+
+function initMap(lat, lng, accuracy) {
+
+    // Create map the first time
     if (!map) {
-        map = L.map("map").setView([lat, lng], 15);
 
-        // Add OpenStreetMap tiles
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19
+        map = L.map("map").setView(
+            [lat, lng],
+            16
+        );
+
+        // OpenStreetMap tiles
+        L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+                attribution:
+                    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+
+                maxZoom: 19
+            }
+        ).addTo(map);
+
+        // Add zoom control
+        L.control.zoom({
+            position: "topright"
         }).addTo(map);
-    } else {
-        map.setView([lat, lng], 15);
-    }
-}
 
-    // Add or move marker
+    } else {
+
+        map.setView(
+            [lat, lng],
+            16,
+            {
+                animate: true
+            }
+        );
+    }
+
+    // ========================================
+    // LOCATION MARKER
+    // ========================================
+
     if (marker) {
-        marker.setLatLng([lat, lng]);
+
+        marker.setLatLng([
+            lat,
+            lng
+        ]);
+
     } else {
-        marker = L.marker([lat, lng]).addTo(map)
-            .bindPopup("📍 You are here")
-            .openPopup();
+
+        marker = L.marker([
+            lat,
+            lng
+        ])
+        .addTo(map)
+        .bindPopup(
+            "<strong>📍 You are here</strong>"
+        )
+        .openPopup();
     }
+
+    // ========================================
+    // ACCURACY CIRCLE
+    // ========================================
+
+    if (accuracyCircle) {
+
+        accuracyCircle
+            .setLatLng([lat, lng])
+            .setRadius(accuracy);
+
+    } else {
+
+        accuracyCircle = L.circle(
+            [lat, lng],
+            {
+                radius: accuracy,
+                color: "#16a085",
+                fillColor: "#1abc9c",
+                fillOpacity: 0.15,
+                weight: 2
+            }
+        ).addTo(map);
+    }
+
+    // Make sure Leaflet knows the map dimensions
+    setTimeout(() => {
+        map.invalidateSize();
+    }, 200);
 }
 
 // ============================================
-// INTEGRATION 3: Nominatim Reverse Geocoding API
+// INTEGRATION 3:
+// NOMINATIM REVERSE GEOCODING API
 // ============================================
+
 async function fetchAddress(lat, lng) {
+
     try {
-        addressEl.textContent = "Fetching address...";
 
-        const url = httpsS//nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng};
-        const response = await fetch(url, {
-            headers: { "Accept": "application/json" }
-        });
+        addressEl.textContent =
+            "📡 Fetching address...";
 
-        if (!response.ok) { 
-            throw new Error('API responded with status ${response.status}') ;
+        const url =
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+
+        const response = await fetch(
+            url,
+            {
+                headers: {
+                    "Accept": "application/json"
+                }
+            }
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                `API responded with status ${response.status}`
+            );
         }
 
         const data = await response.json();
+
         const addr = data.address || {};
+
+        // Build readable address
         const parts = [
-            addr.road,
+
+            addr.house_number &&
+            addr.road
+                ? `${addr.house_number} ${addr.road}`
+                : addr.road,
+
+            addr.neighbourhood,
+
             addr.suburb,
-            addr.city || addr.town || addr.municipality,
-            addr.state
+
+            addr.village,
+
+            addr.town,
+
+            addr.city,
+
+            addr.municipality,
+
+            addr.state,
+
+            addr.country
+
         ].filter(Boolean);
 
-        addressEl.textContent = parts.join(", ") || "Address not found";
+        const uniqueParts =
+            [...new Set(parts)];
+
+        addressEl.textContent =
+            uniqueParts.join(", ") ||
+            data.display_name ||
+            "Address not found.";
+
+        statusEl.textContent =
+            "✅ Location and address found!";
+
+        statusEl.className =
+            "status success";
 
     } catch (error) {
-        console.error("Error fetching address:", error);
-        addressEl.textContent = "Unable to retrieve address.";
+
+        console.error(
+            "Error fetching address:",
+            error
+        );
+
+        addressEl.textContent =
+            "Unable to retrieve the address.";
+
+        statusEl.textContent =
+            "⚠️ Location found, but the address could not be retrieved.";
+
+        statusEl.className =
+            "status error";
+    }
+}
+
+// ============================================
+// CLEAR LOCATION
+// ============================================
+
+function clearLocation() {
+
+    // Clear displayed information
+    latEl.textContent = "";
+    lngEl.textContent = "";
+    accuracyEl.textContent = "";
+    addressEl.textContent = "";
+    timestampEl.textContent = "";
+
+    // Hide result cards
+    resultsEl.classList.add("hidden");
+
+    // Remove marker
+    if (marker && map) {
+
+        map.removeLayer(marker);
+        marker = null;
+    }
+
+    // Remove accuracy circle
+    if (accuracyCircle && map) {
+
+        map.removeLayer(accuracyCircle);
+        accuracyCircle = null;
+    }
+
+    // Reset status
+    statusEl.textContent =
+        "Click the button to find your location.";
+
+    statusEl.className =
+        "status";
+
+    // Reset button
+    resetLocateButton();
+
+    // Reset map
+    if (map) {
+
+        map.setView(
+            [20, 0],
+            2
+        );
     }
 }
