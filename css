@@ -1,3 +1,7 @@
+/* ============================================
+   GLOBAL
+============================================ */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,135 +9,314 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+
     background: #f4f6f9;
     color: #333;
+
     min-height: 100vh;
+
     display: flex;
     flex-direction: column;
 }
 
+/* ============================================
+   HEADER
+============================================ */
+
 header {
-    background: linear-gradient(135deg, #1abc9c, #16a085);
+    background:
+        linear-gradient(
+            135deg,
+            #1abc9c,
+            #16a085
+        );
+
     color: white;
+
     text-align: center;
-    padding: 2rem 1rem;
+
+    padding: 2.5rem 1rem;
 }
 
 header h1 {
-    font-size: 2rem;
-    margin-bottom: 0.3rem;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
 }
 
 header p {
     opacity: 0.9;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
+
+/* ============================================
+   MAIN
+============================================ */
 
 main {
     flex: 1;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 1.5rem;
+
     width: 100%;
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    padding: 1.5rem;
 }
 
-/* Controls */
+/* ============================================
+   CONTROLS
+============================================ */
+
 .controls {
     display: flex;
+
     gap: 0.8rem;
+
     justify-content: center;
-    margin-bottom: 1.2rem;
+
+    margin-bottom: 1rem;
+}
+
+button {
+    font-family: inherit;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.85rem 1.5rem;
+
+    border-radius: 25px;
+
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
 }
 
 .btn-primary {
-    padding: 0.8rem 1.5rem;
     background: #1abc9c;
+
     color: white;
+
     border: none;
-    border-radius: 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
+
+    box-shadow:
+        0 4px 10px
+        rgba(26, 188, 156, 0.25);
 }
 
 .btn-primary:hover {
     background: #16a085;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 14px
+        rgba(26, 188, 156, 0.3);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+
+    cursor: wait;
+
+    transform: none;
 }
 
 .btn-secondary {
-    padding: 0.8rem 1.5rem;
-    background: transparent;
-    color: #7f8c8d;
-    border: 2px solid #bdc3c7;
-    border-radius: 25px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    background: white;
+
+    color: #555;
+
+    border: 2px solid #d5d9dc;
 }
 
 .btn-secondary:hover {
     background: #ecf0f1;
+
+    transform: translateY(-2px);
 }
 
-/* Status */
+/* ============================================
+   STATUS
+============================================ */
+
 .status {
     text-align: center;
+
     color: #7f8c8d;
-    margin-bottom: 1rem;
+
+    margin-bottom: 1.2rem;
+
     font-size: 0.95rem;
+
+    min-height: 22px;
+}
+
+.status.success {
+    color: #16a085;
+
+    font-weight: 600;
 }
 
 .status.error {
     color: #e74c3c;
+
+    font-weight: 600;
 }
 
-/* Results */
+/* ============================================
+   RESULTS
+============================================ */
+
 .results {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(250px, 1fr)
+        );
+
     gap: 1rem;
+
     margin-bottom: 1.5rem;
 }
 
 .info-card {
     background: white;
-    border-radius: 10px;
-    padding: 1.2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+
+    border-radius: 12px;
+
+    padding: 1.3rem;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.08);
+
+    border-left: 4px solid #1abc9c;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 7px 18px
+        rgba(0, 0, 0, 0.1);
 }
 
 .info-card h3 {
     font-size: 1rem;
+
     margin-bottom: 0.8rem;
+
     color: #16a085;
 }
 
 .info-card p {
     font-size: 0.9rem;
+
     margin-bottom: 0.4rem;
+
     line-height: 1.5;
+
+    overflow-wrap: anywhere;
 }
 
-/* Map */
+/* ============================================
+   MAP
+============================================ */
+
 .map {
     width: 100%;
-    height: 450px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+    height: 500px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0, 0, 0, 0.12);
+
+    overflow: hidden;
+
+    background: #dfe6e9;
+
     z-index: 0;
 }
 
+/* ============================================
+   FOOTER
+============================================ */
+
 footer {
     text-align: center;
+
     padding: 1.5rem;
+
     background: #2c3e50;
+
     color: white;
+
     font-size: 0.85rem;
+
     margin-top: 2rem;
 }
+
+/* ============================================
+   UTILITIES
+============================================ */
 
 .hidden {
     display: none;
 }
 
+/* ============================================
+   MOBILE
+============================================ */
+
+@media (max-width: 600px) {
+
+    header {
+        padding: 2rem 1rem;
+    }
+
+    header h1 {
+        font-size: 1.7rem;
+    }
+
+    header p {
+        font-size: 0.8rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+
+    .map {
+        height: 400px;
+    }
+}
