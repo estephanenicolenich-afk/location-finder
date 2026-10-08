@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+}
+
+header p {
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+main {
+    flex: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+}
+
+.btn-primary {
+    padding: 0.8rem 1.5rem;
+    background: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: #16a085;
+}
+
+.btn-secondary {
+    padding: 0.8rem 1.5rem;
+    background: transparent;
+    color: #7f8c8d;
+    border: 2px solid #bdc3c7;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #ecf0f1;
+}
+
+/* Status */
+.status {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.status.error {
+    color: #e74c3c;
+}
+
+/* Results */
+.results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.info-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    color: #16a085;
+}
+
+.info-card p {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.5;
+}
+
+/* Map */
+.map {
+    width: 100%;
+    height: 450px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    z-index: 0;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background: #2c3e50;
+    color: white;
+    font-size: 0.85rem;
+    margin-top: 2rem;
+}
+
+.hidden {
+    display: none;
+}
+Compose
+Write to SCHOOL PURPOSE NA MAY KUNTING CHISMISAN

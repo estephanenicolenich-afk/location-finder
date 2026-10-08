@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Finder</title>
+    <!-- Leaflet CSS (external map library) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>📍 Location Finder</h1>
+        <p>Systems Integration: Geolocation API + OpenStreetMap + Nominatim</p>
+    </header>
+
+    <main>
+        <!-- Control buttons -->
+        <div class="controls">
+            <button id="locateBtn" class="btn-primary">📍 Find My Location</button>
+            <button id="clearBtn" class="btn-secondary">Clear</button>
+        </div>
+
+        <!-- Status / loading message -->
+        <p id="status" class="status">Click the button to find your location.</p>
+
+        <!-- Results panel -->
+        <section id="results" class="results hidden">
+            <div class="info-card">
+                <h3>📍 Coordinates</h3>
+                <p><strong>Latitude:</strong> <span id="lat"></span></p>
+                <p><strong>Longitude:</strong> <span id="lng"></span></p>
+                <p><strong>Accuracy:</strong> <span id="accuracy"></span> meters</p>
+            </div>
+
+            <div class="info-card">
+                <h3>🏠 Address</h3>
+                <p id="address">Fetching address...</p>
+            </div>
+
+            <div class="info-card">
+                <h3>🕒 Timestamp</h3>
+                <p id="timestamp"></p>
+            </div>
+        </section>
+
+        <!-- Map container -->
+        <div id="map" class="map"></div>
+    </main>
+
+    <footer>
+        <p>Location Finder &copy; 2026 | Map data &copy; OpenStreetMap contributors</p>
+    </footer>
+
+    <!-- Leaflet JS (external library) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
